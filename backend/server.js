@@ -1,8 +1,10 @@
-// backend/server.js 
+// backend/server.js (Vercel Production Ready - FIXED)
 
 import express from 'express';
-import dotenv from 'dotenv';
+// ❌ REMOVED: import dotenv from 'dotenv'; // Not needed, Vercel injects variables
 import cors from 'cors';
+
+// Import services and configurations
 import { connectDB } from './config/db.js';
 import { initializeCloudinary } from './config/cloudinary.js';
 
@@ -10,16 +12,18 @@ import { initializeCloudinary } from './config/cloudinary.js';
 import authRoutes from './routes/authRoutes.js';
 import fileRoutes from './routes/fileRoutes.js';
 
-dotenv.config();
+// ❌ REMOVED: dotenv.config(); 
+
+// 🎯 INITIALIZE SERVICES: These MUST read process.env variables injected by Vercel
 connectDB();
-initializeCloudinary(); // Initialize Cloudinary
+initializeCloudinary(); 
 
 const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json()); // Body parser for raw JSON data
-app.use(express.urlencoded({ extended: false })); // Body parser for form data
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -27,22 +31,21 @@ app.use('/api/files', fileRoutes);
 
 // Simple Error Handler (For async-handler errors)
 app.use((err, req, res, next) => {
-console.error(err.stack);
-res.status(err.status || 500).json({
-message: err.message || 'Server Error',
-stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
-});
+    console.error(err.stack);
+    res.status(err.status || 500).json({
+        message: err.message || 'Server Error',
+        // In production, NEVER send the stack trace
+        stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+    });
 });
 
+// Status Check Route
 app.get('/', (req, res) => {
-  res.status(200).json({ 
-    message: 'File Manager Backend API is Live! 🚀',
-    environment: process.env.NODE_ENV || 'production'
-  });
+    res.status(200).json({ 
+        message: 'File Manager Backend API is Live! 🚀',
+        environment: process.env.NODE_ENV || 'production'
+    });
 });
 
-// ❌ REMOVED: const PORT = process.env.PORT || 5000;
-// ❌ REMOVED: app.listen(PORT, () => console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`));
-
-// ✅ ADDED: Export the Express app instance for Vercel to use as a Serverless Function
+// ✅ EXPORT: Export the Express app instance for Vercel
 export default app;
