@@ -1,4 +1,4 @@
-// backend/server.js (FIXED: Removing obsolete share routes)
+// backend/server.js 
 
 import express from 'express';
 import dotenv from 'dotenv';
@@ -9,7 +9,6 @@ import { initializeCloudinary } from './config/cloudinary.js';
 // Import Routes
 import authRoutes from './routes/authRoutes.js';
 import fileRoutes from './routes/fileRoutes.js';
-// 💡 REMOVED: import shareRoutes from './routes/shareRoutes.js'; 
 
 dotenv.config();
 connectDB();
@@ -25,17 +24,18 @@ app.use(express.urlencoded({ extended: false })); // Body parser for form data
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/files', fileRoutes);
-// 💡 REMOVED: app.use('/api/share', shareRoutes); 
 
 // Simple Error Handler (For async-handler errors)
 app.use((err, req, res, next) => {
- console.error(err.stack);
- res.status(err.status || 500).json({
- message: err.message || 'Server Error',
- stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+console.error(err.stack);
+res.status(err.status || 500).json({
+message: err.message || 'Server Error',
+stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
 });
 });
 
-const PORT = process.env.PORT || 5000;
+// ❌ REMOVED: const PORT = process.env.PORT || 5000;
+// ❌ REMOVED: app.listen(PORT, () => console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`));
 
-app.listen(PORT, () => console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`));
+// ✅ ADDED: Export the Express app instance for Vercel to use as a Serverless Function
+export default app;
