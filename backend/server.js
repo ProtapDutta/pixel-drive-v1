@@ -34,6 +34,13 @@ stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
 });
 });
 
+app.get('/', (req, res) => {
+  res.status(200).json({ 
+    message: 'File Manager Backend API is Live! 🚀',
+    environment: process.env.NODE_ENV || 'production'
+  });
+});
+
 // ❌ REMOVED: const PORT = process.env.PORT || 5000;
 // ❌ REMOVED: app.listen(PORT, () => console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`));
 
