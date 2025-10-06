@@ -1,10 +1,14 @@
-// frontend/src/api/axios.js
+// frontend/src/api/axios.js (UPDATED)
 
 import axios from 'axios';
 
+// 🎯 Use the environment variable, falling back to development URL
+const BASE_URL = import.meta.env.VITE_API_BASE_URL 
+    ? `${import.meta.env.VITE_API_BASE_URL}/api` 
+    : 'http://localhost:5000/api'; // Fallback for local development
+
 const api = axios.create({
-    // Use the port where your backend is running
-    baseURL: 'http://localhost:5000/api', 
+    baseURL: BASE_URL, 
     headers: {
         'Content-Type': 'application/json',
     },
